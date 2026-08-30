@@ -1,0 +1,65 @@
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+export default function AdminBlogPage() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function load() {
+    setLoading(true);
+    const res = await fetch("/api/admin/blog");
+    setPosts(await res.json());
+    setLoading(false);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function togglePublish(p: any) {
+    await fetch(`/api/admin/blog/${p.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: p.status === "published" ? "draft" : "published" }),
+    });
+    load();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Delete this post? This cannot be undone.")) return;
+    await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
+    load();
+  }
+
+  return (
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">Blog / Thoughts</h1>
+        <Link href="/admin/blog/new" className="btn-primary">+ Write Article</Link>
+      </div>
+      {loading ? (
+        <p className="text-white/40">Loading...</p>
+      ) : posts.length === 0 ? (
+        <p className="text-white/40">No articles yet.</p>
+      ) : (
+        <div className="glass divide-y divide-white/10">
+          {posts.map((p) => (
+            <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
+              <div>
+                <div className="font-medium text-white">{p.title}</div>
+                <div className="text-xs text-white/40">
+                  {p.category?.name || "Uncategorized"} · <span className={p.status === "published" ? "text-secondary" : "text-yellow-400"}>{p.status}</span>
+                </div>
+              </div>
+              <div className="flex gap-2 text-sm">
+                <button onClick={() => togglePublish(p)} className="btn-outline !px-4 !py-2">
+                  {p.status === "published" ? "Unpublish" : "Publish"}
+                </button>
+                <Link href={`/admin/blog/${p.id}/edit`} className="btn-outline !px-4 !py-2">Edit</Link>
+                <button onClick={() => remove(p.id)} className="rounded-full border border-red-400/30 px-4 py-2 text-red-400 hover:bg-red-400/10">Delete</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
