@@ -11,7 +11,11 @@
 body {
   background: #0f0e17;
   color: #f4f4f8;
+  /* 100vh on mobile includes the address bar's space, so the page height
+     visibly jumps as it shows/hides on scroll. 100dvh tracks the actual
+     visible viewport instead — this is the fix for the "up-down" jitter. */
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
 }
 
@@ -21,6 +25,8 @@ body {
   inset: 0;
   z-index: -1;
   overflow: hidden;
+  pointer-events: none;
+  contain: strict;
 }
 .bg-circles div {
   position: absolute;
@@ -28,6 +34,7 @@ body {
   filter: blur(80px);
   opacity: 0.35;
   animation: float 14s ease-in-out infinite;
+  will-change: transform;
 }
 .circle-1 { width: 380px; height: 380px; background: var(--primary); top: -10%; left: -8%; }
 .circle-2 { width: 320px; height: 320px; background: var(--accent); top: 40%; right: -10%; animation-delay: -4s; }

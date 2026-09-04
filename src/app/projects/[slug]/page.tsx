@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { formatDate } from "@/lib/utils";
+import { formatDate, normalizeUrl } from "@/lib/utils";
 import type { Metadata } from "next";
 
 async function getProject(slug: string) {
@@ -54,10 +54,10 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             </div>
           )}
           <div className="flex flex-col gap-2 pt-2">
-            {project.liveUrl && <a href={project.liveUrl} target="_blank" className="btn-outline justify-center">Live Site</a>}
-            {project.demoUrl && <a href={project.demoUrl} target="_blank" className="btn-outline justify-center">Demo</a>}
-            {project.githubUrl && <a href={project.githubUrl} target="_blank" className="btn-outline justify-center">GitHub</a>}
-            {project.docsUrl && <a href={project.docsUrl} target="_blank" className="btn-outline justify-center">Docs</a>}
+            {project.liveUrl && <a href={normalizeUrl(project.liveUrl)!} target="_blank" rel="noopener noreferrer" className="btn-outline justify-center">Live Site</a>}
+            {project.demoUrl && <a href={normalizeUrl(project.demoUrl)!} target="_blank" rel="noopener noreferrer" className="btn-outline justify-center">Demo</a>}
+            {project.githubUrl && <a href={normalizeUrl(project.githubUrl)!} target="_blank" rel="noopener noreferrer" className="btn-outline justify-center">GitHub</a>}
+            {project.docsUrl && <a href={normalizeUrl(project.docsUrl)!} target="_blank" rel="noopener noreferrer" className="btn-outline justify-center">Docs</a>}
           </div>
         </aside>
       </div>

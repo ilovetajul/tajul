@@ -1,8 +1,21 @@
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { normalizeUrl } from "@/lib/utils";
+
+const SOCIAL_LINKS: [string, string][] = [
+  ["facebook", "Facebook"], ["twitter", "X / Twitter"], ["instagram", "Instagram"],
+  ["linkedin", "LinkedIn"], ["github", "GitHub"], ["website", "Website"],
+  ["whatsapp", "WhatsApp"], ["telegram", "Telegram"], ["messenger", "Messenger"], ["skype", "Skype"],
+];
 
 export default async function AboutPage() {
   const profile = await prisma.profile.findUnique({ where: { id: "profile" } }).catch(() => null);
+  const socials = profile
+    ? SOCIAL_LINKS.filter(([key]) => (profile as any)[key]).map(([key, label]) => ({
+        label,
+        url: normalizeUrl((profile as any)[key]),
+      }))
+    : [];
 
   return (
     <section className="section-padding container-xl">
@@ -26,6 +39,21 @@ export default async function AboutPage() {
             {profile?.email && <span className="glass px-3 py-1.5">✉️ {profile.email}</span>}
             {profile?.phone && <span className="glass px-3 py-1.5">📞 {profile.phone}</span>}
           </div>
+          {socials.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.url!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/70 hover:bg-white/20 hover:text-white"
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

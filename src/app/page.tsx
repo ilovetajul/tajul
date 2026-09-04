@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import ProjectCard from "@/components/ProjectCard";
+import { normalizeUrl } from "@/lib/utils";
 
 export default async function HomePage() {
   const profile = await prisma.profile.findUnique({ where: { id: "profile" } }).catch(() => null);
@@ -30,7 +31,7 @@ export default async function HomePage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/projects" className="btn-primary">View Projects</Link>
             {profile?.resumeUrl && (
-              <a href={profile.resumeUrl} target="_blank" className="btn-outline">Download Resume</a>
+              <a href={normalizeUrl(profile.resumeUrl)!} target="_blank" rel="noopener noreferrer" className="btn-outline">Download Resume</a>
             )}
             <Link href="/contact" className="btn-outline">Contact Me</Link>
           </div>

@@ -28,7 +28,15 @@ export const supabaseStorage: StorageProvider = {
       .from(bucket)
       .upload(storagePath, buffer, { contentType, upsert: false });
 
-    if (error) throw new Error(`Supabase Storage upload failed: ${error.message}`);
+    if (error) {
+      if (/bucket not found/i.test(error.message)) {
+        throw new Error(
+          `Storage bucket "${bucket}" doesn't exist yet. In Supabase → Storage, create a ` +
+          `bucket named exactly "${bucket}" (Public) and try again.`
+        );
+      }
+      throw new Error(`Supabase Storage upload failed: ${error.message}`);
+    }
 
     const { data } = supabase.storage.from(bucket).getPublicUrl(storagePath);
 

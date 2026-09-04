@@ -37,3 +37,18 @@ export function formatDate(date: Date | string | null | undefined) {
     month: "short",
   });
 }
+
+/**
+ * Ensures an admin-entered external URL actually has a protocol.
+ * Without this, a value like "example.com" renders as <a href="example.com">,
+ * which the browser resolves RELATIVE to the current page — so clicking it
+ * just navigates within your own site instead of leaving it. This fixes both
+ * newly-saved URLs and URLs that were already saved without a protocol.
+ */
+export function normalizeUrl(url?: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
