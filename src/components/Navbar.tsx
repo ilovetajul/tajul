@@ -14,7 +14,7 @@ const LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ isAdmin = false }: { isAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 glass-strong mx-4 mt-4 rounded-2xl px-5 py-3 md:mx-8">
@@ -22,12 +22,17 @@ export default function Navbar() {
         <Link href="/" className="text-lg font-bold text-gradient">
           Tajul Islam
         </Link>
-        <nav className="hidden gap-6 text-sm text-white/80 md:flex">
+        <nav className="hidden items-center gap-6 text-sm text-white/80 md:flex">
           {LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="hover:text-white transition-colors">
               {l.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link href="/admin" className="rounded-full bg-primary/90 px-4 py-1.5 text-white hover:bg-primary">
+              Admin
+            </Link>
+          )}
         </nav>
         <button
           className="text-white md:hidden"
@@ -44,6 +49,11 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link href="/admin" onClick={() => setOpen(false)} className="font-medium text-primary">
+              → Admin Panel
+            </Link>
+          )}
         </nav>
       )}
     </header>

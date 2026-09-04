@@ -33,7 +33,10 @@ export default function AdminProjectsPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Projects</h1>
-        <Link href="/admin/projects/new" className="btn-primary">+ Add Project</Link>
+        <div className="flex gap-2">
+          <Link href="/admin/projects/import" className="btn-outline">Bulk Import</Link>
+          <Link href="/admin/projects/new" className="btn-primary">+ Add Project</Link>
+        </div>
       </div>
 
       {loading ? (

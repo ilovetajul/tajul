@@ -33,7 +33,10 @@ export default function AdminBlogPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Blog / Thoughts</h1>
-        <Link href="/admin/blog/new" className="btn-primary">+ Write Article</Link>
+        <div className="flex gap-2">
+          <Link href="/admin/blog/import" className="btn-outline">Bulk Import</Link>
+          <Link href="/admin/blog/new" className="btn-primary">+ Write Article</Link>
+        </div>
       </div>
       {loading ? (
         <p className="text-white/40">Loading...</p>

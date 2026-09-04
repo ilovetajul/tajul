@@ -11,10 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const unreadMessages = await prisma.message.count({ where: { read: false } }).catch(() => 0);
 
   return (
-    <div className="min-h-screen bg-dark md:flex">
-      <div className="bg-circles">
-        <div className="circle-1" /><div className="circle-2" /><div className="circle-3" /><div className="circle-4" />
-      </div>
+    <div className="min-h-screen md:flex">
       <AdminSidebar unreadMessages={unreadMessages} />
       <main className="flex-1 p-4 md:p-8">{children}</main>
     </div>

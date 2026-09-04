@@ -25,10 +25,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-dark px-4">
-      <div className="bg-circles">
-        <div className="circle-1" /><div className="circle-2" /><div className="circle-3" /><div className="circle-4" />
-      </div>
+    <div className="flex min-h-screen items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="glass w-full max-w-sm space-y-4 p-8">
         <h1 className="text-xl font-bold text-white">Admin Login</h1>
         <input
