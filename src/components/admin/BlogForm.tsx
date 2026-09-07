@@ -73,7 +73,7 @@ export default function BlogForm({ initial }: { initial?: any }) {
     const block = current.slice(lineStart, lineEnd);
     const prefixed = block
       .split("\n")
-      .map((line) => (line.startsWith(prefix) ? line : prefix + line))
+      .map((line: string) => (line.startsWith(prefix) ? line : prefix + line))
       .join("\n");
     const next = current.slice(0, lineStart) + prefixed + current.slice(lineEnd);
     set("content", next);

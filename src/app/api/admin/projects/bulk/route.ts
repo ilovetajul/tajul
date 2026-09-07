@@ -6,7 +6,7 @@ import { uniqueSlug, makeSlug } from "@/lib/utils";
 
 function splitList(value: any): string[] {
   if (!value || typeof value !== "string") return [];
-  return value.split(";").map((v) => v.trim()).filter(Boolean);
+  return value.split(";").map((v: string) => v.trim()).filter(Boolean);
 }
 
 function parseBool(value: any): boolean {
