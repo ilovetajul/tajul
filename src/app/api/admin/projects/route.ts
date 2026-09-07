@@ -30,6 +30,8 @@ export async function POST(req: Request) {
       slug,
       shortDesc: body.shortDesc || "",
       description: body.description || "",
+      titleBn: body.titleBn || null,
+      descriptionBn: body.descriptionBn || null,
       thumbnailUrl: body.thumbnailUrl || null,
       categoryId: body.categoryId || null,
       technologies: body.technologies || [],

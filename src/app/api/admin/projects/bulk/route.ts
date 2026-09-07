@@ -51,6 +51,8 @@ export async function POST(req: Request) {
           slug,
           shortDesc: row.shortDesc || "",
           description: row.description || "",
+          titleBn: row.titleBn || null,
+          descriptionBn: row.descriptionBn || null,
           categoryId,
           technologies: splitList(row.technologies),
           tags: splitList(row.tags),

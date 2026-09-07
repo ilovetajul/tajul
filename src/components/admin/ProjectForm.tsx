@@ -13,6 +13,8 @@ export default function ProjectForm({ initial }: { initial?: any }) {
     title: initial?.title || "",
     shortDesc: initial?.shortDesc || "",
     description: initial?.description || "",
+    titleBn: initial?.titleBn || "",
+    descriptionBn: initial?.descriptionBn || "",
     thumbnailUrl: initial?.thumbnailUrl || "",
     categoryId: initial?.categoryId || "",
     technologies: (initial?.technologies || []).join(", "),
@@ -59,6 +61,15 @@ export default function ProjectForm({ initial }: { initial?: any }) {
       <textarea placeholder="Full description" rows={6} value={form.description} onChange={(e) => set("description", e.target.value)} className={inputCls} />
 
       <ImageUploader label="Thumbnail" value={form.thumbnailUrl} onChange={(url) => set("thumbnailUrl", url)} folder="projects" />
+
+      <details className="rounded-lg bg-white/5 p-3 text-sm text-white/60">
+        <summary className="cursor-pointer font-medium text-white/80">বাংলা অনুবাদ (ঐচ্ছিক) — Bengali translation, optional</summary>
+        <div className="mt-3 space-y-3">
+          <p className="text-xs text-white/40">খালি রাখলে ভিজিটর শুধু English দেখবে। পূরণ করলে সাইটে English | বাংলা টগল বাটন দেখাবে।</p>
+          <input placeholder="শিরোনাম (বাংলা)" value={form.titleBn} onChange={(e) => set("titleBn", e.target.value)} className={inputCls} />
+          <textarea placeholder="সম্পূর্ণ বিবরণ (বাংলা)" rows={6} value={form.descriptionBn} onChange={(e) => set("descriptionBn", e.target.value)} className={inputCls} />
+        </div>
+      </details>
 
       <select value={form.categoryId} onChange={(e) => set("categoryId", e.target.value)} className={inputCls}>
         <option value="">No category</option>

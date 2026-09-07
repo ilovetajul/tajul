@@ -48,6 +48,8 @@ export async function POST(req: Request) {
           slug,
           excerpt: row.excerpt || null,
           content: row.content || "",
+          titleBn: row.titleBn || null,
+          contentBn: row.contentBn || null,
           categoryId,
           tags: splitList(row.tags),
           status: publishing ? "published" : "draft",

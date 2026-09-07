@@ -58,7 +58,9 @@ export default function BulkImport({
         <p className="mb-2 text-sm text-white/70">
           Upload a CSV with one {type === "project" ? "project" : "blog post"} per row. Not sure of the
           columns? Start from the template — fill it in with any spreadsheet app (Google Sheets, Excel)
-          and export/download it as CSV before uploading here.
+          and export/download it as CSV before uploading here. The template's{" "}
+          <span className="text-white/50">titleBn</span> / <span className="text-white/50">{type === "project" ? "descriptionBn" : "contentBn"}</span>{" "}
+          columns are optional — fill them in for a Bengali version, or leave them blank.
         </p>
         <a href={templateUrl} download className="btn-outline inline-block !px-4 !py-2 text-sm">
           Download CSV Template

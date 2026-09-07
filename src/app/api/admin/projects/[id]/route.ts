@@ -41,6 +41,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       slug,
       shortDesc: body.shortDesc ?? existing.shortDesc,
       description: body.description ?? existing.description,
+      titleBn: body.titleBn ?? existing.titleBn,
+      descriptionBn: body.descriptionBn ?? existing.descriptionBn,
       thumbnailUrl: body.thumbnailUrl ?? existing.thumbnailUrl,
       categoryId: body.categoryId ?? existing.categoryId,
       technologies: body.technologies ?? existing.technologies,

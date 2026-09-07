@@ -27,6 +27,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       : existing.slug;
 
   const nowPublishing = body.status === "published" && existing.status !== "published";
+  // Priority: an explicit date the admin typed in > auto-"now" on first publish > whatever it already was.
+  const publishedAt = body.publishedAt
+    ? new Date(body.publishedAt)
+    : nowPublishing
+    ? new Date()
+    : existing.publishedAt;
 
   const post = await prisma.blogPost.update({
     where: { id: params.id },
@@ -35,13 +41,16 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       slug,
       featuredImg: body.featuredImg ?? existing.featuredImg,
       content: body.content ?? existing.content,
+      titleBn: body.titleBn ?? existing.titleBn,
+      contentBn: body.contentBn ?? existing.contentBn,
       excerpt: body.excerpt ?? existing.excerpt,
       categoryId: body.categoryId ?? existing.categoryId,
       tags: body.tags ?? existing.tags,
       status: body.status ?? existing.status,
       seoTitle: body.seoTitle ?? existing.seoTitle,
       seoDesc: body.seoDesc ?? existing.seoDesc,
-      publishedAt: nowPublishing ? new Date() : existing.publishedAt,
+      publishedAt,
+      sortOrder: body.sortOrder ?? existing.sortOrder,
     },
   });
   return NextResponse.json(post);

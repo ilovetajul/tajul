@@ -10,7 +10,7 @@ export async function GET() {
 
   const posts = await prisma.blogPost.findMany({
     include: { category: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
   });
   return NextResponse.json(posts);
 }
@@ -24,6 +24,8 @@ export async function POST(req: Request) {
 
   const slug = await uniqueSlug("blogPost", body.title);
   const publishing = body.status === "published";
+  // Admin can now set their own publish date instead of it always being "now".
+  const publishedAt = body.publishedAt ? new Date(body.publishedAt) : publishing ? new Date() : null;
 
   const post = await prisma.blogPost.create({
     data: {
@@ -31,13 +33,16 @@ export async function POST(req: Request) {
       slug,
       featuredImg: body.featuredImg || null,
       content: body.content || "",
+      titleBn: body.titleBn || null,
+      contentBn: body.contentBn || null,
       excerpt: body.excerpt || null,
       categoryId: body.categoryId || null,
       tags: body.tags || [],
       status: body.status || "draft",
       seoTitle: body.seoTitle || null,
       seoDesc: body.seoDesc || null,
-      publishedAt: publishing ? new Date() : null,
+      publishedAt,
+      sortOrder: body.sortOrder ?? 0,
     },
   });
   return NextResponse.json(post);
