@@ -58,6 +58,10 @@ model Project {
   slug         String           @unique
   shortDesc    String
   description  String
+  // Optional Bengali translation — shown via an EN/বাংলা toggle on the public project
+  // page only when filled in. Left blank, the page just shows English as before.
+  titleBn      String?
+  descriptionBn String?
   thumbnailUrl String?
   images       ProjectImage[]
   categoryId   String?
@@ -98,6 +102,9 @@ model BlogPost {
   slug        String        @unique
   featuredImg String?
   content     String
+  // Optional Bengali translation — same EN/বাংলা toggle pattern as Project.
+  titleBn     String?
+  contentBn   String?
   excerpt     String?
   categoryId  String?
   category    BlogCategory? @relation(fields: [categoryId], references: [id])
@@ -106,6 +113,7 @@ model BlogPost {
   seoTitle    String?
   seoDesc     String?
   publishedAt DateTime?
+  sortOrder   Int           @default(0)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }
