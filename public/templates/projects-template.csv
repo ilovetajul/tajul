@@ -1,3 +1,0 @@
-title,shortDesc,description,category,technologies,tags,role,client,projectDate,liveUrl,githubUrl,demoUrl,docsUrl,featured,status,titleBn,descriptionBn
-Inventory Tracker,A simple tool to track warehouse stock,"Full description goes here. You can write several sentences.",Web Development,React;Node.js,inventory;internal-tool,Developer,Amantex Limited,2025-03-01,https://example.com,https://github.com/example/repo,,,false,draft,,
-Production Line Dashboard,Live dashboard for production KPIs,"Full description goes here.",Automation,Python;PLC,dashboard;factory,Automation Engineer,,2024-11-15,,,,,true,draft,,
