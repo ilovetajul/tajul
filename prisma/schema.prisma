@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // DATABASE_URL: the POOLED connection (port 6543, ?pgbouncer=true) — used at runtime
+  // by every serverless function (Netlify/Vercel). Required for Supabase + serverless.
+  url       = env("DATABASE_URL")
+  // DIRECT_URL: the DIRECT connection (port 5432, no pgbouncer) — used only when running
+  // `npx prisma migrate` locally. Migrations don't work reliably through a pooler.
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+  name     String
+}
+
+model Profile {
+  id            String   @id @default("profile")
+  name          String   @default("Tajul Islam")
+  title         String   @default("Merchandiser & Industrial Engineer")
+  photoUrl      String?
+  coverPhotoUrl String?
+  shortBio      String?
+  biography     String?
+  objective     String?
+  location      String?
+  email         String?
+  phone         String?
+  resumeUrl     String?
+  resumeUpdatedAt DateTime? // auto-set by the API whenever resumeUrl actually changes
+  // Manually verified by you — shown in the homepage stats strip only when set.
+  yearsExperience Int?
+  facebook      String?
+  twitter       String?
+  instagram     String?
+  linkedin      String?
+  whatsapp      String?
+  skype         String?
+  telegram      String?
+  messenger     String?
+  github        String?
+  website       String?
+  updatedAt     DateTime @updatedAt
+}
+
+model ProjectCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  projects Project[]
+}
+
+model Project {
+  id           String           @id @default(cuid())
+  title        String
+  slug         String           @unique
+  shortDesc    String
+  description  String
+  // Optional Bengali translation — shown via an EN/বাংলা toggle on the public project
+  // page only when filled in. Left blank, the page just shows English as before.
+  titleBn      String?
+  descriptionBn String?
+  // Case-study fields (V2 professional upgrade). All optional — a project with none
+  // of these still renders fine with just Overview; fill in whichever apply.
+  problem         String?
+  approach         String?
+  solution         String?
+  results          String? // impact/results — where quantified metrics belong
+  challenges       String?
+  lessonsLearned   String?
+  duration         String? // free text, e.g. "3 months" — deliberately not two date fields
+  thumbnailUrl String?
+  images       ProjectImage[]
+  testimonials Testimonial[]
+  categoryId   String?
+  category     ProjectCategory? @relation(fields: [categoryId], references: [id])
+  technologies String[]         @default([])
+  role         String?
+  client       String?
+  projectDate  DateTime?
+  liveUrl      String?
+  githubUrl    String?
+  demoUrl      String?
+  docsUrl      String?
+  status       String           @default("draft") // draft | published
+  featured     Boolean          @default(false)
+  tags         String[]         @default([])
+  sortOrder    Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  url       String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+}
+
+model BlogCategory {
+  id    String     @id @default(cuid())
+  name  String     @unique
+  slug  String     @unique
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  featuredImg String?
+  content     String
+  // Optional Bengali translation — same EN/বাংলা toggle pattern as Project.
+  titleBn     String?
+  contentBn   String?
+  excerpt     String?
+  categoryId  String?
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  tags        String[]      @default([])
+  status      String        @default("draft") // draft | published
+  seoTitle    String?
+  seoDesc     String?
+  publishedAt DateTime?
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Experience {
+  id                String    @id @default(cuid())
+  company           String
+  position          String
+  department        String?
+  employmentType    String?
+  startDate         DateTime
+  endDate           DateTime?
+  current           Boolean   @default(false)
+  responsibilities  String?
+  achievements      String?
+  technologies      String[]  @default([])
+  companyUrl        String?
+  companyLogo       String?
+  sortOrder         Int       @default(0)
+}
+
+model Education {
+  id             String    @id @default(cuid())
+  institution    String
+  degree         String
+  subject        String?
+  startDate      DateTime
+  endDate        DateTime?
+  description    String?
+  certificateUrl String?
+  institutionUrl String?
+  location       String?
+  status         String? // ongoing | completed
+  // Reuses this same model for certifications rather than a duplicate table — mark an
+  // entry as a certification to have it pulled into its own section on the public site.
+  isCertification Boolean @default(false)
+  issuer          String? // if blank, falls back to `institution` on display
+  credentialId    String?
+  sortOrder      Int       @default(0)
+}
+
+model SkillCategory {
+  id        String  @id @default(cuid())
+  name      String  @unique
+  sortOrder Int     @default(0)
+  skills    Skill[]
+}
+
+model Skill {
+  id          String         @id @default(cuid())
+  name        String
+  categoryId  String?
+  category    SkillCategory? @relation(fields: [categoryId], references: [id])
+  level       String? // Beginner | Intermediate | Advanced | Expert
+  description String?
+  icon        String?
+  yearsExp    Float?
+  sortOrder   Int            @default(0)
+}
+
+model Media {
+  id               String   @id @default(cuid())
+  url              String
+  filename         String
+  originalFilename String?
+  type             String // image | pdf | document
+  mimeType         String?
+  size             Int?
+  width            Int?
+  height           Int?
+  altText          String?
+  title            String?
+  // provider: supabase | external_url | google_drive | google_photos | local
+  // ("local" is the value old pre-migration rows implicitly have — see seed/migration notes)
+  provider         String   @default("local")
+  bucket           String?
+  storagePath      String?
+  externalId       String? // e.g. Google Drive file ID
+  folder           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  designation String? // job title
+  company     String?
+  quote       String
+  avatarUrl   String?
+  linkedinUrl String?
+  projectId   String? // optional link to a specific Project
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  featured    Boolean  @default(false)
+  status      String   @default("draft") // draft | published
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteSetting {
+  id              String  @id @default("settings")
+  siteTitle       String  @default("Tajul Islam")
+  siteDesc        String?
+  favicon         String?
+  primaryColor    String  @default("#6C63FF")
+  secondaryColor  String  @default("#4CAF50")
+  contactEmail    String?
+  contactPhone    String?
+  footerText      String?
+  gaId            String?
+  ogImage         String?
+  maintenanceMode Boolean @default(false)
+}
